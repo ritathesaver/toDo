@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-export default function Navbar() {
+const Navbar: FunctionComponent = () => {
 	return (
 		<View style={styles.navbar}>
 			<Text style={styles.navbarLogo}>{Date.now().toLocaleString()}</Text>
 		</View>
 	)
 }
+
+export default Navbar
 
 const styles = StyleSheet.create({
 	navbar: {
