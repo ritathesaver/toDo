@@ -1,9 +1,12 @@
-import React, { FunctionComponent } from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, { FunctionComponent, useState } from 'react'
+import { StyleSheet, KeyboardAvoidingView, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import { addTodo, toggleTodo } from '../redux/actions'
 import Todo from './Todo'
+import AddTodo from './AddTodo'
+import SearchTodo from './SearchTodo'
+import { NavigationProp } from '@react-navigation/native'
 
 export interface ITodo {
 	completed: boolean
@@ -13,21 +16,42 @@ export interface ITodo {
 
 export interface ITodoListProps {
 	todos: ITodo[]
+	navigation: NavigationProp<any>
 }
 
-const TodoList: FunctionComponent<ITodoListProps> = ({ todos }) => {
+interface IItemProps {
+	item: ITodo
+	index: number
+}
+
+const TodoList: FunctionComponent<ITodoListProps> = ({ todos, navigation }) => {
+	const [ search, setSearch ] = useState('')
 	return (
-		<View style={styles.container}>
-			{todos.map((todo: ITodo) => <Todo key={todo.id} todo={todo} onClick={() => toggleTodo(todo.id)} />)}
-		</View>
+		<KeyboardAvoidingView style={styles.container} behavior="padding">
+			<FlatList
+				data={todos.filter((todo) => todo.text.includes(search))}
+				keyExtractor={(todo: ITodo) => `${todo.id}`}
+				ListHeaderComponent={() => <SearchTodo setSearch={setSearch} search={search} />}
+				ListFooterComponent={AddTodo}
+				renderItem={({ item, index }: IItemProps) => (
+					<Todo
+						todo={item}
+						onClick={() => {
+							navigation.navigate('Details', { todo: item })
+						}}
+					/>
+				)}
+			/>
+		</KeyboardAvoidingView>
 	)
 }
 
 const styles = StyleSheet.create({
 	container: {
 		paddingHorizontal: 10,
-		marginTop: 15,
-		alignItems: 'center'
+		paddingTop: 15,
+		flex: 1,
+		backgroundColor: '#393e46'
 	}
 })
 

@@ -1,10 +1,21 @@
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useState, useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 const Navbar: FunctionComponent = () => {
+	const utc: String = new Date().toLocaleDateString('ru')
+	const [ time, setTime ] = useState(Date.now())
+
+	useEffect(() => {
+		const interval = setInterval(() => setTime(Date.now()), 1000)
+		return () => {
+			clearInterval(interval)
+		}
+	}, [])
+
 	return (
 		<View style={styles.navbar}>
-			<Text style={styles.navbarLogo}>{Date.now().toLocaleString()}</Text>
+			<Text style={styles.navbarTitle}>{utc}</Text>
+			<Text style={styles.navbarSubtitle}>{new Date(time).toLocaleTimeString()}</Text>
 		</View>
 	)
 }
@@ -13,14 +24,18 @@ export default Navbar
 
 const styles = StyleSheet.create({
 	navbar: {
-		height: 150,
+		height: 130,
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingBottom: 10,
 		backgroundColor: '#f8b500'
 	},
-	navbarLogo: {
+	navbarTitle: {
+		marginTop: 20,
 		color: '#f7f7f7',
-		fontSize: 20
+		fontSize: 24
+	},
+	navbarSubtitle: {
+		color: '#f7f7f7',
+		fontSize: 18
 	}
 })

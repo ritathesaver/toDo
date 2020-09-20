@@ -10,25 +10,34 @@ export interface Props {
 }
 
 const AddTodo: FunctionComponent<Props> = ({ addTodo }) => {
+	const [ inputActive, setInputActive ] = useState(false)
 	const [ text, setText ] = useState('')
 	const onAdd = useCallback(
 		() => {
-			addTodo(text)
+			if (text) {
+				setInputActive(false)
+				addTodo(text)
+			}
+
 			setText('')
 		},
 		[ text ]
 	)
 	return (
 		<View style={styles.container}>
-			<TextInput
-				style={styles.inputForm}
-				onChangeText={setText}
-				defaultValue={text}
-				placeholder="Type your todo...sweety"
-			/>
-			<TouchableOpacity onPress={onAdd}>
-				<AddSvg style={styles.addButton} />
-			</TouchableOpacity>
+			{inputActive ? (
+				<TextInput
+					style={styles.inputForm}
+					onChangeText={setText}
+					defaultValue={text}
+					placeholder="Type your todo...sweetie"
+					onSubmitEditing={onAdd}
+				/>
+			) : (
+				<TouchableOpacity onPress={() => setInputActive(true)}>
+					<AddSvg style={styles.addButton} />
+				</TouchableOpacity>
+			)}
 		</View>
 	)
 }
