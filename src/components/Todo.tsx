@@ -1,28 +1,30 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import { StyleSheet, View, Text, TouchableWithoutFeedback, GestureResponderEvent } from 'react-native'
 import { ITodo } from './TodoList'
 import CheckBox from '@react-native-community/checkbox'
+import { toggleTodo } from '../redux/actions'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import { connect } from 'react-redux'
 
 export interface ITodoProps {
 	todo: ITodo
 	onClick: (event: GestureResponderEvent) => void
+	toggleTodo: any
 }
 
-const Todo: FunctionComponent<ITodoProps> = ({ todo, onClick }) => {
-	const [ toggleCheckBox, setToggleCheckBox ] = useState(false)
-
+const Todo: FunctionComponent<ITodoProps> = ({ todo, onClick, toggleTodo }) => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.wrapper}>
 				<TouchableWithoutFeedback onPress={onClick}>
-					<Text style={[ styles.todoText, toggleCheckBox && styles.todoTextChecked ]}>{todo.text}</Text>
+					<Text style={[ styles.todoText, todo.completed && styles.todoTextChecked ]}>{todo.text}</Text>
 				</TouchableWithoutFeedback>
 				<CheckBox
 					disabled={false}
-					value={toggleCheckBox}
+					value={todo.completed}
 					onTintColor="#f8b500"
 					onCheckColor="#f8b500"
-					onValueChange={(newValue) => setToggleCheckBox(newValue)}
+					onValueChange={() => toggleTodo(todo.id)}
 				/>
 			</View>
 			<View style={styles.line} />
@@ -54,4 +56,12 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default Todo
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+	bindActionCreators(
+		{
+			toggleTodo
+		},
+		dispatch
+	)
+
+export default connect(null, mapDispatchToProps)(Todo)
