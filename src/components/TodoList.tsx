@@ -27,19 +27,25 @@ interface IItemProps {
 const TodoList: FunctionComponent<ITodoListProps> = ({ todos, navigation }) => {
 	const [ search, setSearch ] = useState('')
 
+	const clearSearch = () => {
+		setSearch('')
+	}
+
 	const renderHeader = useCallback(() => <SearchTodo setSearch={setSearch} search={search} />, [ search ])
+
+	const renderFooter = useCallback(() => <AddTodo clearSearch={clearSearch} />, [])
 	return (
 		<KeyboardAvoidingView style={styles.container} behavior="padding">
 			<FlatList
 				data={todos.filter((todo) => todo.text.includes(search))}
 				keyExtractor={(todo: ITodo) => `${todo.id}`}
 				ListHeaderComponent={renderHeader()}
-				ListFooterComponent={AddTodo}
+				ListFooterComponent={renderFooter()}
 				renderItem={({ item, index }: IItemProps) => (
 					<Todo
 						todo={item}
 						onClick={() => {
-							navigation.navigate('Details', { todo: item })
+							navigation.navigate('Details', { id: item.id })
 						}}
 					/>
 				)}

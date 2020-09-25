@@ -16,58 +16,48 @@ interface IDetailsProps {
 
 }
 
-const TodoDetails: FunctionComponent<IDetailsProps> = ({ route, deleteTodo, editTodo, navigation }) => {
-  const [isDeleted, setIsDeleted] = useState(false)
+const TodoDetails: FunctionComponent<IDetailsProps> = ({ route, todo, deleteTodo, editTodo, navigation }) => {
   const [inputActive, setInputActive] = useState(false)
-  const [text, setText] = useState(route?.params?.todo.text)
+  const [text, setText] = useState(todo?.text)
 
   const onEdit = useCallback(
     () => {
       if (text) {
         setInputActive(false)
    
-        editTodo(route?.params?.todo.id, text)
+        editTodo(todo.id, text)
       }
-
-      setText('')
     },
     [text]
   )
 
-  if (isDeleted) {
-    navigation.goBack()
-  }
+
   return (
     <KeyboardAvoidingView style={styles.containerTodo} behavior="padding" keyboardVerticalOffset={100}>
       <ScrollView showsVerticalScrollIndicator={false}>
-       <Todo onClick={() => { }} todo={route?.params?.todo} />
-        <Button color='#f7f7f7' onPress={() => { deleteTodo(route?.params?.todo.id); setIsDeleted(true) }} title="Delete"></Button>
-        {inputActive ? (
-          <TextInput
-            style={styles.inputForm}
-            onChangeText={setText}
-            defaultValue={text}
-            placeholder="Edit your todo"
-            onSubmitEditing={onEdit}
-          />
-        ) : (
-            <Button color='#f7f7f7' onPress={() => {setInputActive(true) }} title="Edit"></Button>
-          )}
-     
+        {
+          todo ? (
+            <>
+              <Todo onClick={() => { }} todo={todo} />
+              <Button color='#f7f7f7' onPress={() => { deleteTodo(todo.id); navigation.goBack() }} title="Delete" />
+              {inputActive ? (
+                <TextInput
+                  style={styles.inputForm}
+                  onChangeText={setText}
+                  defaultValue={text}
+                  placeholder="Edit your todo"
+                  onSubmitEditing={onEdit}
+                />
+              ) : (
+                <Button color='#f7f7f7' onPress={() => { setInputActive(true) }} title="Edit"></Button>
+              )}
+            </>
+          ) : null
+        }
       </ScrollView>
     </KeyboardAvoidingView>
   )
 }
-
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators(
-    {
-      deleteTodo,
-      editTodo 
-    },
-    
-    dispatch
-  )
 
 const styles = StyleSheet.create({
   containerTodo: {
@@ -87,11 +77,22 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapStateToProps = (state: { todos: String }) => {
+const mapStateToProps = (state: { todos: ITodo[] }, { route }: IDetailsProps) => {
   const { todos } = state
-  return { todos }
+  const todo = todos.find(item => item.id === route?.params?.id)
+  return { todo }
 }
 
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+  bindActionCreators(
+    {
+      deleteTodo,
+      editTodo
+    },
+
+    dispatch
+  )
 
 
 export default connect( mapStateToProps, mapDispatchToProps)(TodoDetails)
