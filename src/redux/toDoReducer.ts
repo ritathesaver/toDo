@@ -1,10 +1,15 @@
-import { combineReducers } from 'redux'
+export interface ITodo {
+	completed: boolean
+	id: number
+	text: string
+}
 
-const INITIAL_STATE = []
+const INITIAL_STATE: ITodo[] = []
 
-const toDoReducer = (state = INITIAL_STATE, action) => {
+export const toDoReducer = (state = INITIAL_STATE, action: { type: string; id: number; text: string }): ITodo[] => {
 	switch (action.type) {
 		case 'ADD_TODO':
+			console.log(action.id)
 			return [
 				...state,
 				{
@@ -18,7 +23,7 @@ const toDoReducer = (state = INITIAL_STATE, action) => {
 		case 'DELETE_TODO':
 			return state.filter((todo) => todo.id !== action.id)
 		case 'EDIT_TODO':
-			return state.map((todo) => {
+			return state.map((todo: ITodo): ITodo => {
 				if (todo.id !== action.id) {
 					return todo
 				}
@@ -29,7 +34,3 @@ const toDoReducer = (state = INITIAL_STATE, action) => {
 			return state
 	}
 }
-
-export default combineReducers({
-	todos: toDoReducer
-})

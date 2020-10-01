@@ -1,6 +1,7 @@
-import React, { FunctionComponent, useState, useCallback, memo } from 'react'
-import { StyleSheet, View, TextInput } from 'react-native'
+import React, { FunctionComponent, memo } from 'react'
+import { View, TextInput } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { styles } from './styles'
 
 interface ISearchProps {
 	setSearch: (value: string) => void
@@ -15,28 +16,5 @@ const SearchTodo: FunctionComponent<ISearchProps> = ({ setSearch, search }) => {
 		</View>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		padding: 10,
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	inputForm: {
-		flex: 1,
-		borderRadius: 25,
-		borderWidth: 1,
-		borderColor: '#ccc',
-		color: '#000',
-		backgroundColor: '#fff',
-		padding: 15,
-		width: '100%'
-	},
-	searchIcon: {
-		padding: 10
-	}
-})
 
 export default memo(SearchTodo)

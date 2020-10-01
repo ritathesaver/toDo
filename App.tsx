@@ -1,12 +1,12 @@
 import React, { FunctionComponent } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Provider } from 'react-redux'
-import Navbar from './src/components/Navbar'
+import Navbar from './src/components/Navbar/Navbar'
 import { store } from './src/redux'
-import TodoList from './src/components/TodoList'
+import TodoList from './src/components/TodoList/TodoList'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import TodoDetails from './src/components/TodoDetails'
+import TodoDetails from './src/components/TodoDetails/TodoDetails'
 
 const Stack = createStackNavigator()
 
@@ -40,5 +40,5 @@ const styles = StyleSheet.create({
 		backgroundColor: '#393e46'
 	}
 })
-
+export type AppDispatch = typeof store.dispatch
 export default App
