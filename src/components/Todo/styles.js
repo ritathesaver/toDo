@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
 		margin: 20
 	},
 	todoText: {
+		width: '90%',
 		color: '#f7f7f7',
 		fontSize: 20
 	},

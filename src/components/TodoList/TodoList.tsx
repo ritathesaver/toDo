@@ -1,11 +1,15 @@
-import React, { FunctionComponent, useState, useCallback } from 'react'
-import { StyleSheet, KeyboardAvoidingView, FlatList } from 'react-native'
+import React, { FunctionComponent, useState, useCallback, useEffect } from 'react'
+import { KeyboardAvoidingView, FlatList } from 'react-native'
 import Todo from '../Todo/Todo'
 import AddTodo from '../AddTodo/AddTodo'
 import SearchTodo from '../SearchTodo/SearchTodo'
 import { NavigationProp } from '@react-navigation/native'
 import { styles } from './styles'
 import { useTypedSelector, RootState } from '../../redux/rootReducer'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../../App'
+import { getTodos } from '../../redux/actions/index'
 
 export interface ITodo {
 	completed: boolean
@@ -24,6 +28,18 @@ interface IItemProps {
 }
 
 const TodoList: FunctionComponent<ITodoListProps> = ({ navigation }) => {
+	const dispatch: AppDispatch = useDispatch()
+	useEffect(() => {
+		;(async () => {
+			const { data } = await axios({
+				url: 'https://jsonplaceholder.typicode.com/todos',
+				method: 'GET'
+			})
+			//rconsole.log(data)
+			dispatch(getTodos(data))
+		})()
+	}, [])
+
 	const [ search, setSearch ] = useState('')
 
 	const todos = useTypedSelector((state: RootState) => state.todos)

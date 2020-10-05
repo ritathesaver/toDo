@@ -38,6 +38,12 @@ const TodoDetails: FunctionComponent<IDetailsProps> = ({navigation, route }) => 
     [dispatch, text]
   )
 
+  const onDelete = () => {
+    dispatch(deleteTodo(todo?.id));
+    console.log(todo?.id)
+    navigation.goBack()
+  }
+
   if (!todo) {
     return null
   }
@@ -49,7 +55,7 @@ const TodoDetails: FunctionComponent<IDetailsProps> = ({navigation, route }) => 
           todo ? (
             <>
               <Todo onClick={() => { }} todo={todo} />
-              <Button color='#f7f7f7' onPress={() => { dispatch(deleteTodo(todo.id)); navigation.goBack() }} title="Delete" />
+              <Button color='#f7f7f7' onPress={onDelete} title="Delete" />
               {inputActive ? (
                 <TextInput
                   style={styles.inputForm}

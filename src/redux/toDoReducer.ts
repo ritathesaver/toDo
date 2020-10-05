@@ -6,30 +6,40 @@ export interface ITodo {
 
 const INITIAL_STATE: ITodo[] = []
 
-export const toDoReducer = (state = INITIAL_STATE, action: { type: string; id: number; text: string }): ITodo[] => {
+export const toDoReducer = (state = INITIAL_STATE, action: { type: string; payload: any }): ITodo[] => {
 	switch (action.type) {
-		case 'ADD_TODO':
-			console.log(action.id)
+		case 'GET_TODOS':
+			return [ ...action.payload ]
+		case 'ADD_TODO': {
+			const { id, text } = action.payload
 			return [
 				...state,
 				{
-					id: action.id,
-					text: action.text,
+					id,
+					text,
 					completed: false
 				}
 			]
-		case 'TOGGLE_TODO':
-			return state.map((todo) => (todo.id === action.id ? { ...todo, completed: !todo.completed } : todo))
-		case 'DELETE_TODO':
-			return state.filter((todo) => todo.id !== action.id)
-		case 'EDIT_TODO':
+		}
+		case 'TOGGLE_TODO': {
+			const { id } = action.payload
+			return state.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo))
+		}
+		case 'DELETE_TODO': {
+			const { id } = action.payload
+
+			return state.filter((todo) => todo.id !== id)
+		}
+		case 'EDIT_TODO': {
+			const { id, text } = action.payload
 			return state.map((todo: ITodo): ITodo => {
-				if (todo.id !== action.id) {
+				if (todo.id !== id) {
 					return todo
 				}
 
-				return { ...todo, text: action.text }
+				return { ...todo, text }
 			})
+		}
 		default:
 			return state
 	}
