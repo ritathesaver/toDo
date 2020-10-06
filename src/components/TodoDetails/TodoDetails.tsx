@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useCallback } from 'react'
-import { ScrollView, KeyboardAvoidingView, Button, TextInput } from 'react-native'
+import { ScrollView, KeyboardAvoidingView, Button,TextInput } from 'react-native'
 import { RouteProp, NavigationProp } from '@react-navigation/native'
 import Todo from '../Todo/Todo'
 import { ITodo } from '../TodoList/TodoList'
@@ -19,28 +19,27 @@ interface IDetailsProps {
 
 const TodoDetails: FunctionComponent<IDetailsProps> = ({navigation, route }) => {
 
-  const todo = useTypedSelector((state: RootState) => state.todos.find(item => item.id === route?.params?.id))
+  const todo = useTypedSelector((state: RootState) => state.todos.todos.find(item => item.id === route?.params?.id))
   const dispatch: AppDispatch = useDispatch()
 
  
 
   const [inputActive, setInputActive] = useState(false)
-  const [text, setText] = useState(todo?.text)
+  const [title, setTitle] = useState(todo?.title)
 
   const onEdit = useCallback(
     () => {
-      if (todo && text) {
+      if (todo && title) {
         setInputActive(false)
-        dispatch(editTodo(todo.id, text))
-   
+        dispatch(editTodo(todo.id, title))
+      
       }
     },
-    [dispatch, text]
+    [dispatch, title]
   )
 
   const onDelete = () => {
     dispatch(deleteTodo(todo?.id));
-    console.log(todo?.id)
     navigation.goBack()
   }
 
@@ -59,8 +58,8 @@ const TodoDetails: FunctionComponent<IDetailsProps> = ({navigation, route }) => 
               {inputActive ? (
                 <TextInput
                   style={styles.inputForm}
-                  onChangeText={setText}
-                  defaultValue={text}
+                  onChangeText={setTitle}
+                  defaultValue={title}
                   placeholder="Edit your todo"
                   onSubmitEditing={onEdit}
                 />

@@ -17,7 +17,6 @@ export const styles = StyleSheet.create({
 	},
 
 	addButton: {
-		marginTop: 10,
 		width: 40,
 		height: 40
 	}

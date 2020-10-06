@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useCallback } from 'react'
-import { StyleSheet, TouchableOpacity, View, TextInput, GestureResponderEvent } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, TextInput } from 'react-native'
 import { connect, useDispatch } from 'react-redux'
 import { addTodo } from '../../redux/actions/index'
 

@@ -1,23 +1,42 @@
 import axios from 'axios'
 
-export const getTodos = (data) => async (dispatch) => {
+export const getTodos = () => async (dispatch) => {
+	const res = await axios.get('https://jsonplaceholder.typicode.com/todos')
+
 	dispatch({
 		type: 'GET_TODOS',
-		payload: data.map(({ title, userId, ...item }) => ({ ...item, text: title }))
+		payload: res.data
 	})
 }
 
-export const addTodo = (text) => async (dispatch) => {
-	const res = await axios.post('https://jsonplaceholder.typicode.com/todos', { title: text, completed: false })
-
-	dispatch({
-		type: 'ADD_TODO',
-		payload: {
-			id: res.data.id,
-			text: res.data.title
-		}
-	})
+export const addTodo = (title) => async (dispatch) => {
+	dispatch(addTodoStarted())
+	try {
+		const res = await axios.post('https://jsonplaceholder.typicode.com/todos', { title: title, completed: false })
+		dispatch(addTodoSuccess(res.data))
+	} catch (err) {
+		dispatch(addTodoFailure(err))
+	}
 }
+
+const addTodoSuccess = (todo) => ({
+	type: 'ADD_TODO_SUCCESS',
+	payload: {
+		id: todo.id,
+		title: todo.title
+	}
+})
+
+const addTodoStarted = () => ({
+	type: 'ADD_TODO_STARTED'
+})
+
+const addTodoFailure = (error) => ({
+	type: 'ADD_TODO_FAILURE',
+	payload: {
+		error
+	}
+})
 
 export const toggleTodo = (id) => ({
 	type: 'TOGGLE_TODO',
@@ -37,13 +56,13 @@ export const deleteTodo = (id) => async (dispatch) => {
 	})
 }
 
-export const editTodo = (id, text) => async (dispatch) => {
-	const res = await axios.put(`https://jsonplaceholder.typicode.com/todos/${id}`, { title: text })
+export const editTodo = (id, title) => async (dispatch) => {
+	const res = await axios.put(`https://jsonplaceholder.typicode.com/todos/${id}`, { title: title })
 	dispatch({
 		type: 'EDIT_TODO',
 		payload: {
 			id: res.data.id,
-			text: res.data.title
+			title: res.data.title
 		}
 	})
 }

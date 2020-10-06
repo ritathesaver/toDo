@@ -18,7 +18,7 @@ const Todo: FunctionComponent<ITodoProps> = ({ todo, onClick }) => {
 		<View style={styles.container}>
 			<View style={styles.wrapper}>
 				<TouchableWithoutFeedback onPress={onClick}>
-					<Text style={[ styles.todoText, todo.completed && styles.todoTextChecked ]}>{todo.text}</Text>
+					<Text style={[ styles.todoText, todo.completed && styles.todoTextChecked ]}>{todo.title}</Text>
 				</TouchableWithoutFeedback>
 				<CheckBox
 					disabled={false}

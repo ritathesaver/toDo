@@ -1,44 +1,87 @@
 export interface ITodo {
-	completed: boolean
 	id: number
-	text: string
+	title: string
+	completed: boolean
 }
 
-const INITIAL_STATE: ITodo[] = []
+export interface ITodoState {
+	todos: ITodo[]
+	loading: boolean
+	error: null
+}
 
-export const toDoReducer = (state = INITIAL_STATE, action: { type: string; payload: any }): ITodo[] => {
+const INITIAL_STATE: ITodoState = { loading: false, error: null, todos: [] }
+
+export const toDoReducer = (state = INITIAL_STATE, action: { type: string; payload: any }): ITodoState => {
 	switch (action.type) {
 		case 'GET_TODOS':
-			return [ ...action.payload ]
-		case 'ADD_TODO': {
-			const { id, text } = action.payload
-			return [
+			return {
 				...state,
-				{
-					id,
-					text,
-					completed: false
-				}
-			]
+				todos: action.payload
+			}
+		case 'ADD_TODO': {
+			const { id, title } = action.payload
+			return {
+				...state,
+				loading: false,
+				error: null,
+				todos: [
+					...state.todos,
+					{
+						id: id,
+						title: title,
+						completed: false
+					}
+				]
+			}
 		}
+		case 'ADD_TODO_STARTED':
+			return {
+				...state,
+				loading: true
+			}
+
+		case 'ADD_TODO_SUCCESS':
+			return {
+				...state,
+				loading: false,
+				error: null,
+				todos: [ ...state.todos, action.payload ]
+			}
+		case 'ADD_TODO_FAILURE':
+			return {
+				...state,
+				loading: false,
+				error: action.payload.error
+			}
 		case 'TOGGLE_TODO': {
 			const { id } = action.payload
-			return state.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo))
+			return {
+				...state,
+				todos: state.todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo))
+			}
 		}
 		case 'DELETE_TODO': {
 			const { id } = action.payload
 
-			return state.filter((todo) => todo.id !== id)
+			return {
+				...state,
+				todos: state.todos.filter((todo) => todo.id !== id)
+			}
 		}
 		case 'EDIT_TODO': {
-			const { id, text } = action.payload
-			return state.map((todo: ITodo): ITodo => {
-				if (todo.id !== id) {
-					return todo
-				}
+			const { id, title } = action.payload
 
-				return { ...todo, text }
-			})
+			return {
+				...state,
+				todos: state.todos.map((todo: ITodo): ITodo => {
+					if (todo.id !== id) {
+						return todo
+					}
+
+					return { ...todo, title }
+				})
+			}
 		}
 		default:
 			return state

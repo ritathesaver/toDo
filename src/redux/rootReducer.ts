@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
 import { TypedUseSelectorHook, useSelector } from 'react-redux'
-import { toDoReducer, ITodo } from './toDoReducer'
+import { toDoReducer, ITodoState } from './toDoReducer'
 
 export interface RootState {
-	todos: ITodo[]
+	todos: ITodoState
 }
 
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector

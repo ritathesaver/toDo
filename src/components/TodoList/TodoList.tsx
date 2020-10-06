@@ -1,20 +1,20 @@
 import React, { FunctionComponent, useState, useCallback, useEffect } from 'react'
-import { KeyboardAvoidingView, FlatList } from 'react-native'
+import { ActivityIndicator, KeyboardAvoidingView, FlatList } from 'react-native'
 import Todo from '../Todo/Todo'
 import AddTodo from '../AddTodo/AddTodo'
 import SearchTodo from '../SearchTodo/SearchTodo'
 import { NavigationProp } from '@react-navigation/native'
 import { styles } from './styles'
 import { useTypedSelector, RootState } from '../../redux/rootReducer'
-import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../App'
 import { getTodos } from '../../redux/actions/index'
+import WarningSvg from '../../assets/warning.svg'
 
 export interface ITodo {
 	completed: boolean
 	id: number
-	text: string
+	title: string
 }
 
 export interface ITodoListProps {
@@ -30,44 +30,44 @@ interface IItemProps {
 const TodoList: FunctionComponent<ITodoListProps> = ({ navigation }) => {
 	const dispatch: AppDispatch = useDispatch()
 	useEffect(() => {
-		;(async () => {
-			const { data } = await axios({
-				url: 'https://jsonplaceholder.typicode.com/todos',
-				method: 'GET'
-			})
-			//rconsole.log(data)
-			dispatch(getTodos(data))
-		})()
+		dispatch(getTodos())
 	}, [])
 
 	const [ search, setSearch ] = useState('')
 
-	const todos = useTypedSelector((state: RootState) => state.todos)
-
 	const clearSearch = () => {
 		setSearch('')
 	}
+	const todoLoading = useTypedSelector((state: RootState) => state.todos.loading)
+	const todoError = useTypedSelector((state: RootState) => state.todos.error)
 
 	const renderHeader = useCallback(() => <SearchTodo setSearch={setSearch} search={search} />, [ search ])
 
-	const renderFooter = useCallback(() => <AddTodo clearSearch={clearSearch} />, [])
+	const searchedTodos = useTypedSelector((state: RootState) =>
+		state.todos.todos.filter((todo) => todo.title.toLowerCase().includes(search.toLowerCase()))
+	)
 
 	return (
 		<KeyboardAvoidingView style={styles.container} behavior="padding">
-			<FlatList
-				data={todos.filter((todo) => todo.text.toLowerCase().includes(search.toLowerCase()))}
-				keyExtractor={(todo: ITodo) => `${todo.id}`}
-				ListHeaderComponent={renderHeader()}
-				ListFooterComponent={renderFooter()}
-				renderItem={({ item, index }: IItemProps) => (
-					<Todo
-						todo={item}
-						onClick={() => {
-							navigation.navigate('Details', { id: item.id })
-						}}
-					/>
-				)}
-			/>
+			{todoError && <WarningSvg />}
+			<AddTodo clearSearch={clearSearch} />
+			{todoLoading && <ActivityIndicator size="large" color="#f8b500" />}
+			{!todoLoading &&
+			!todoError && (
+				<FlatList
+					data={searchedTodos.reverse()}
+					keyExtractor={(todo: ITodo) => `${todo.id}`}
+					ListHeaderComponent={renderHeader()}
+					renderItem={({ item, index }: IItemProps) => (
+						<Todo
+							todo={item}
+							onClick={() => {
+								navigation.navigate('Details', { id: item.id })
+							}}
+						/>
+					)}
+				/>
+			)}
 		</KeyboardAvoidingView>
 	)
 }
