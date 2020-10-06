@@ -7,9 +7,10 @@ import { addTodo } from '../redux/actions'
 
 export interface Props {
 	addTodo: any
+	clearSearch: any
 }
 
-const AddTodo: FunctionComponent<Props> = ({ addTodo }) => {
+const AddTodo: FunctionComponent<Props> = ({ addTodo, clearSearch }) => {
 	const [ inputActive, setInputActive ] = useState(false)
 	const [ text, setText ] = useState('')
 	const onAdd = useCallback(
@@ -18,6 +19,7 @@ const AddTodo: FunctionComponent<Props> = ({ addTodo }) => {
 				setInputActive(false)
 				addTodo(text)
 			}
+			clearSearch()
 
 			setText('')
 		},

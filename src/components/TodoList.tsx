@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useState, useCallback } from 'react'
 import { StyleSheet, KeyboardAvoidingView, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
@@ -26,18 +26,26 @@ interface IItemProps {
 
 const TodoList: FunctionComponent<ITodoListProps> = ({ todos, navigation }) => {
 	const [ search, setSearch ] = useState('')
+
+	const clearSearch = () => {
+		setSearch('')
+	}
+
+	const renderHeader = useCallback(() => <SearchTodo setSearch={setSearch} search={search} />, [ search ])
+
+	const renderFooter = useCallback(() => <AddTodo clearSearch={clearSearch} />, [])
 	return (
 		<KeyboardAvoidingView style={styles.container} behavior="padding">
 			<FlatList
 				data={todos.filter((todo) => todo.text.includes(search))}
 				keyExtractor={(todo: ITodo) => `${todo.id}`}
-				ListHeaderComponent={() => <SearchTodo setSearch={setSearch} search={search} />}
-				ListFooterComponent={AddTodo}
+				ListHeaderComponent={renderHeader()}
+				ListFooterComponent={renderFooter()}
 				renderItem={({ item, index }: IItemProps) => (
 					<Todo
 						todo={item}
 						onClick={() => {
-							navigation.navigate('Details', { todo: item })
+							navigation.navigate('Details', { id: item.id })
 						}}
 					/>
 				)}
