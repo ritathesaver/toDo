@@ -15,6 +15,7 @@ const AddTodo: FunctionComponent<Props> = ({ clearSearch }) => {
 	const [ inputActive, setInputActive ] = useState(false)
 	const dispatch: AppDispatch = useDispatch()
 	const [ text, setText ] = useState('')
+
 	const onAdd = useCallback(
 		() => {
 			if (text) {

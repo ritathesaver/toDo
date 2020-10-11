@@ -2,12 +2,12 @@ import React, { FunctionComponent, useState, useCallback } from 'react'
 import { ScrollView, KeyboardAvoidingView, Button,TextInput } from 'react-native'
 import { RouteProp, NavigationProp } from '@react-navigation/native'
 import Todo from '../Todo/Todo'
-import { ITodo } from '../TodoList/TodoList'
 import { useDispatch } from 'react-redux'
 import {styles} from './styles'
 import { useTypedSelector, RootState } from '../../redux/rootReducer'
 import { AppDispatch } from '../../../App'
 import { editTodo, deleteTodo } from '../../redux/actions/index'
+import { ITodo } from '../../redux/reducers'
 
 interface IDetailsProps {
   route: RouteProp<any, any>
@@ -30,6 +30,7 @@ const TodoDetails: FunctionComponent<IDetailsProps> = ({navigation, route }) => 
   const onEdit = useCallback(
     () => {
       if (todo && title) {
+
         setInputActive(false)
         dispatch(editTodo(todo.id, title))
       

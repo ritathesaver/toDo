@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from 'react'
 import { View, Text, TouchableWithoutFeedback, GestureResponderEvent } from 'react-native'
-import { ITodo } from '../TodoList/TodoList'
 import CheckBox from '@react-native-community/checkbox'
 import { styles } from './styles'
 import { AppDispatch } from '../../../App'
 import { useDispatch } from 'react-redux'
 import { toggleTodo } from '../../redux/actions/index'
+import { ITodo } from '../../redux/reducers'
 
 export interface ITodoProps {
 	todo: ITodo

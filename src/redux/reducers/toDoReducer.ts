@@ -14,27 +14,11 @@ const INITIAL_STATE: ITodoState = { loading: false, error: null, todos: [] }
 
 export const toDoReducer = (state = INITIAL_STATE, action: { type: string; payload: any }): ITodoState => {
 	switch (action.type) {
-		case 'GET_TODOS':
+		case 'GET_TODOS_SUCCESS':
 			return {
 				...state,
 				todos: action.payload
 			}
-		case 'ADD_TODO': {
-			const { id, title } = action.payload
-			return {
-				...state,
-				loading: false,
-				error: null,
-				todos: [
-					...state.todos,
-					{
-						id: id,
-						title: title,
-						completed: false
-					}
-				]
-			}
-		}
 		case 'ADD_TODO_STARTED':
 			return {
 				...state,
@@ -61,7 +45,7 @@ export const toDoReducer = (state = INITIAL_STATE, action: { type: string; paylo
 				todos: state.todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo))
 			}
 		}
-		case 'DELETE_TODO': {
+		case 'DELETE_TODO_SUCCESS': {
 			const { id } = action.payload
 
 			return {
@@ -69,7 +53,7 @@ export const toDoReducer = (state = INITIAL_STATE, action: { type: string; paylo
 				todos: state.todos.filter((todo) => todo.id !== id)
 			}
 		}
-		case 'EDIT_TODO': {
+		case 'EDIT_TODO_SUCCESS': {
 			const { id, title } = action.payload
 
 			return {

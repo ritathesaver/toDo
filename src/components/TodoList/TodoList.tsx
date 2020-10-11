@@ -10,12 +10,7 @@ import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../App'
 import { getTodos } from '../../redux/actions/index'
 import WarningSvg from '../../assets/warning.svg'
-
-export interface ITodo {
-	completed: boolean
-	id: number
-	title: string
-}
+import { ITodo } from '../../redux/reducers'
 
 export interface ITodoListProps {
 	todos: ITodo[]
@@ -29,6 +24,7 @@ interface IItemProps {
 
 const TodoList: FunctionComponent<ITodoListProps> = ({ navigation }) => {
 	const dispatch: AppDispatch = useDispatch()
+
 	useEffect(() => {
 		dispatch(getTodos())
 	}, [])
