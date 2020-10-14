@@ -1,5 +1,14 @@
 import { call, put, all, fork, takeLatest } from 'redux-saga/effects'
-import { addTodo, addTodoSuccess, addTodoFailure, addTodoStarted, getTodos } from './actions'
+import {
+	addTodoAsync,
+	getTodos,
+	deleteTodo,
+	editTodo,
+	addTodo,
+	addTodoStarted,
+	addTodoSuccess,
+	addTodoFailure
+} from './actions'
 import axios from 'axios'
 
 async function getData() {
@@ -17,18 +26,19 @@ async function deleteData(id) {
 
 async function editData(body) {
 	const { data } = await axios.put(`https://jsonplaceholder.typicode.com/todos/${body.id}`, { title: body.title })
+	console.log(data)
 	return data
 }
 
 function* workerAddTodo(action) {
-	yield put(addTodoStarted())
+	yield put(addTodoAsync.request())
 
 	try {
 		const resAdd = yield call(postData, { title: action.payload.title, completed: false })
 
-		yield put(addTodoSuccess(resAdd))
+		yield put(addTodoAsync.success(resAdd))
 	} catch (err) {
-		yield put(addTodoFailure(err))
+		yield put(addTodoAsync.failure(err))
 	}
 }
 
@@ -44,6 +54,7 @@ function* workerDeleteTodo(action) {
 }
 
 function* workerEditTodo(action) {
+	console.log(action.payload.id)
 	const resEdit = yield call(editData, { id: action.payload.id, title: action.payload.title })
 	console.log(resEdit)
 
