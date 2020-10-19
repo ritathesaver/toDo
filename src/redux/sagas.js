@@ -1,14 +1,5 @@
 import { call, put, all, fork, takeLatest } from 'redux-saga/effects'
-import {
-	addTodoAsync,
-	getTodos,
-	deleteTodo,
-	editTodo,
-	addTodo,
-	addTodoStarted,
-	addTodoSuccess,
-	addTodoFailure
-} from './actions'
+import { addTodoAsync } from './actions'
 import axios from 'axios'
 
 async function getData() {

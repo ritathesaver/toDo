@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useCallback } from 'react'
-import { StyleSheet, TouchableOpacity, View, TextInput } from 'react-native'
-import { connect, useDispatch } from 'react-redux'
+import { TouchableOpacity, View, TextInput } from 'react-native'
+import { useDispatch } from 'react-redux'
 import { addTodo } from '../../redux/actions/index'
 
 import AddSvg from '../../assets/add.svg'
@@ -13,8 +13,8 @@ export interface Props {
 
 const AddTodo: FunctionComponent<Props> = ({ clearSearch }) => {
 	const [ inputActive, setInputActive ] = useState(false)
-	const dispatch: AppDispatch = useDispatch()
 	const [ text, setText ] = useState('')
+	const dispatch: AppDispatch = useDispatch()
 
 	const onAdd = useCallback(
 		() => {
@@ -22,12 +22,12 @@ const AddTodo: FunctionComponent<Props> = ({ clearSearch }) => {
 				setInputActive(false)
 				dispatch(addTodo(text))
 			}
-			clearSearch()
 
 			setText('')
 		},
-		[ dispatch, text ]
+		[ text ]
 	)
+	clearSearch()
 
 	return (
 		<View style={styles.container}>

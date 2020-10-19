@@ -4,10 +4,10 @@ import { RouteProp, NavigationProp } from '@react-navigation/native'
 import Todo from '../Todo/Todo'
 import { useDispatch } from 'react-redux'
 import {styles} from './styles'
-import { useTypedSelector, RootState } from '../../redux/rootReducer'
 import { AppDispatch } from '../../../App'
 import { editTodo, deleteTodo } from '../../redux/actions/index'
 import { ITodo } from '../../redux/reducers'
+import { useSelectTodo } from '../hooks/useSelect'
 
 interface IDetailsProps {
   route: RouteProp<any, any>
@@ -19,7 +19,7 @@ interface IDetailsProps {
 
 const TodoDetails: FunctionComponent<IDetailsProps> = ({navigation, route }) => {
 
-  const todo = useTypedSelector((state: RootState) => state.todos.todos.find(item => item.id === route?.params?.id))
+  const todo = useSelectTodo(route)
   const dispatch: AppDispatch = useDispatch()
 
  
@@ -39,10 +39,10 @@ const TodoDetails: FunctionComponent<IDetailsProps> = ({navigation, route }) => 
     [dispatch, title]
   )
 
-  const onDelete = () => {
+  const onDelete = useCallback ( () => {
     dispatch(deleteTodo(todo?.id));
     navigation.goBack()
-  }
+  },[])
 
   if (!todo) {
     return null
