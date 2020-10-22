@@ -1,13 +1,16 @@
-import { createAction, createAsyncAction, createCustomAction } from 'typesafe-actions'
-import { ITodo } from '../reducers'
-
-let nextTodoId = 201
+import { createAsyncAction, createCustomAction } from 'typesafe-actions'
+import { ITodo, ITodoState } from '../reducers'
+const { v4: uuidv4 } = require('uuid')
+import 'react-native-get-random-values'
+//let nextTodoId = 200
 
 export const toggleTodo = createCustomAction('TOGGLE_TODO', (id: number) => ({ payload: { id } }))
 
 export const getTodos = createCustomAction('GET_TODOS')
 
-export const addTodo = createCustomAction('ADD_TODO', (title: string) => ({ payload: { id: nextTodoId++, title } }))
+export const addTodo = createCustomAction('ADD_TODO', (title: string) => ({
+	payload: { title }
+}))
 
 export const deleteTodo = createCustomAction('DELETE_TODO', (id: number | undefined) => ({ payload: { id } }))
 

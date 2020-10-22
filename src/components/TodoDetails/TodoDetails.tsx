@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useCallback } from 'react'
+import React, { FunctionComponent, useState, useCallback, useEffect } from 'react'
 import { ScrollView, KeyboardAvoidingView, Button,TextInput } from 'react-native'
 import { RouteProp, NavigationProp } from '@react-navigation/native'
 import Todo from '../Todo/Todo'
@@ -7,7 +7,7 @@ import {styles} from './styles'
 import { AppDispatch } from '../../../App'
 import { editTodo, deleteTodo } from '../../redux/actions/index'
 import { ITodo } from '../../redux/reducers'
-import { useSelectTodo } from '../hooks/useSelect'
+import { useTypedSelector, RootState } from '../../redux/rootReducer'
 
 interface IDetailsProps {
   route: RouteProp<any, any>
@@ -17,11 +17,14 @@ interface IDetailsProps {
 }
 
 
-const TodoDetails: FunctionComponent<IDetailsProps> = ({navigation, route }) => {
+const TodoDetails: FunctionComponent<IDetailsProps> = ({ navigation, route }) => {
+  
 
-  const todo = useSelectTodo(route)
+  const todo = useTypedSelector((state: RootState) =>
+    state.todos.todos[route?.params?.id])
+
   const dispatch: AppDispatch = useDispatch()
-
+  //const todos = useTypedSelector((state: RootState) => state.todos
  
 
   const [inputActive, setInputActive] = useState(false)

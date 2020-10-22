@@ -8,6 +8,7 @@ async function getData() {
 }
 async function postData(body) {
 	const { data } = await axios.post('https://jsonplaceholder.typicode.com/todos', body)
+	console.log('2', body)
 	return data
 }
 
@@ -17,15 +18,17 @@ async function deleteData(id) {
 
 async function editData(body) {
 	const { data } = await axios.put(`https://jsonplaceholder.typicode.com/todos/${body.id}`, { title: body.title })
-	console.log(data)
+	//console.log(data)
 	return data
 }
 
 function* workerAddTodo(action) {
 	yield put(addTodoAsync.request())
+	console.log('1', action)
 
 	try {
-		const resAdd = yield call(postData, { title: action.payload.title, completed: false })
+		const resAdd = yield call(postData, action.payload)
+		console.log('3', resAdd)
 
 		yield put(addTodoAsync.success(resAdd))
 	} catch (err) {
@@ -45,9 +48,9 @@ function* workerDeleteTodo(action) {
 }
 
 function* workerEditTodo(action) {
-	console.log(action.payload.id)
+	//console.log(action.payload.id)
 	const resEdit = yield call(editData, { id: action.payload.id, title: action.payload.title })
-	console.log(resEdit)
+	//console.log(resEdit)
 
 	yield put({ type: 'EDIT_TODO_SUCCESS', payload: { id: resEdit.id, title: resEdit.title } })
 }

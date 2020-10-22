@@ -16,6 +16,10 @@ const AddTodo: FunctionComponent<Props> = ({ clearSearch }) => {
 	const [ text, setText ] = useState('')
 	const dispatch: AppDispatch = useDispatch()
 
+	//const [ addTodos ] = useAddTodos(text)
+
+	//let id = uuidv4()
+
 	const onAdd = useCallback(
 		() => {
 			if (text) {
@@ -24,10 +28,10 @@ const AddTodo: FunctionComponent<Props> = ({ clearSearch }) => {
 			}
 
 			setText('')
+			clearSearch()
 		},
-		[ text ]
+		[ dispatch, text ]
 	)
-	clearSearch()
 
 	return (
 		<View style={styles.container}>
